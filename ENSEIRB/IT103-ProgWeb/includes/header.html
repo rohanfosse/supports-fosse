@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Accueil | IT103 </title>
+<link rel="icon" type="image/x-icon" href="laptop.svg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="css/test_menu.css">
+
+<style>
+body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+
+</style>
+</head>
+
+<body class="w3-light-grey">
+    <div class="progress-container">
+        <div class="progress-bar" id="myBar"></div>
+      </div>  
+
+
+          
+
+
+          <nav>
+          <li><a href="http://rfosse.vvv.enseirb-matmeca.fr/IT103" class="logo"> <i class="bi bi-globe"></i> IT103</a>  </li>    
+  <ul id="main">
+  
+  <div class="header">
+  
+        <div class="header-right">
+        
+          <a class="active" href="http://rfosse.vvv.enseirb-matmeca.fr/IT103/index.php"><li>Accueil</li></a>
+          <li onclick="Project()">Projet</li>
+    
+    <li>Cours
+      <ul class="drop">
+        <div>
+          <a href="http://rfosse.vvv.enseirb-matmeca.fr/IT103/slides.php"><li>Slides</li></a>
+          <a href="http://rfosse.vvv.enseirb-matmeca.fr/IT103/articles/article_css.php"><li>HTML/CSS</li></a>
+          <a href="http://rfosse.vvv.enseirb-matmeca.fr/IT103/articles/article_php.php"><li>PHP</li></a>
+          <a href="http://rfosse.vvv.enseirb-matmeca.fr/IT103/articles/article_sql.php"><li>MYSQL</li></a>
+          <a href="http://rfosse.vvv.enseirb-matmeca.fr/IT103/Quizz/Quizz.php"><li>Quizz</li></a>
+          <a href="http://rfosse.vvv.enseirb-matmeca.fr/IT103/Examen/Sujet.php"><li>Examen</li></a>
+        </div>
+      </ul>
+    </li>
+    <li>TP
+      <ul class="drop">
+        <div>
+          <a href="http://rfosse.vvv.enseirb-matmeca.fr/IT103/TP/TP1.php"><li>TP1</li></a>
+        <a href="http://rfosse.vvv.enseirb-matmeca.fr/IT103/TP/TP2.php"><li>TP2</li></a>
+        </div>
+      </ul>
+    </li>
+    <li onclick="Contact()">A propos</li>
+    <div id="marker"></div>
+  </ul>
+</nav>
+          
+          
+        </div>
+      </div>
+      <script>
+        function Project() {
+          location.replace("http://rfosse.vvv.enseirb-matmeca.fr/IT103/Projet/project.php")
+        }
+
+        function Contact() {
+          location.replace("http://rfosse.vvv.enseirb-matmeca.fr/IT103/contact.php")
+        }
+
+        </script>    
