@@ -1,0 +1,189 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\author{}
+\date{}
+
+\begin{document}
+
+\textbf{Élection d'un leader}
+
+On considère un réseau constitué de \emph{n} sites 0,. . .,\emph{n −} 1.
+Chaque site \emph{i} a une valeur \emph{vali} avec les \emph{vali} deux
+à deux distincts. Le leader est le site avec la plus grande valeur
+\emph{vali}. A un moment donné, l'un des sites veut initier une
+élection, c'est à dire initier un algorithme distribué qui a pour but de
+déterminer lequel des sites est le leader.
+
+\textbf{Exercice : élection dans un anneau unidirectionnel.}
+
+Le réseau est organisé en cycle unidirectionnel : les communications
+élémentaires entre sites voisins sont des communications allant de
+\emph{i} à \emph{i} + 1 (modulo \emph{n}).\\
+On propose l'algorithme suivant pour le site \emph{i}.
+
+\begin{quote}
+Initialisation de l'élection ou 1ère réception de message \emph{→}
+
+1. envoyer le message \emph{\textless{}} 1\emph{, vali \textgreater{}} à
+\emph{succi}\\
+2. \emph{etati ← actif} ;
+
+3. \emph{maxi ← vali} ;
+
+Réception du message \textless1,V\textgreater{} \emph{→}
+
+1. si (\emph{etati} == \emph{actif}) alors
+
+(a) si (\emph{V} ! = \emph{maxi}) alors
+\emph{envoyer}(\emph{\textless{}} 2\emph{, V \textgreater{}});
+\emph{voisini} = \emph{V}
+
+(b) sinon \emph{maxi} est élu, prevenir les autres,
+
+2. Sinon envoyer le message \emph{\textless{}} 1\emph{, V
+\textgreater{}} à \emph{succi}
+
+Réception du message \emph{\textless{}} 2\emph{, V \textgreater→}
+
+1. si (\emph{etati}==actif) alors
+
+(a) si \emph{voisini \textgreater{} V} et \emph{voisin\textgreater maxi}
+alors
+
+i. \emph{maxi ← voisini}\\
+ii. envoyer \emph{\textless{}} 1\emph{, maxi \textgreater{}} à
+\emph{succi}
+
+(b) Sinon \emph{etati ← passif} ;
+
+2. sinon envoyer (\textless2,V\textgreater) à \emph{succi}
+\end{quote}
+
+\textbf{Question 1 :} Appliquer cet algorithme sur un exemple sur un
+anneau d'au moins 4 sites sachant qu'un seul processeur initie
+l'élection.
+
+\textbf{Question 2 :} A quoi servent les variables locales \emph{maxi},
+\emph{etati}, \emph{voisini} du site \emph{i} ? A quoi servent les deux
+messages ?
+
+\textbf{Question 3 :} Par qui peut être proclamé le résultat ?
+
+1
+
+\textbf{Question 4 :} Quelle est la complexité de l'algorithme en nombre
+de messages (au pire des cas) lors que tous les sites commencent
+l'élection en même temps ?
+
+\textbf{Exercice : élection dans un anneau bidirectionnel.}
+
+Le réseau est organisé en cycle nidirectionnel : les communications
+élémentaires entre sites voisins sont des communications allant de
+\emph{i} à \emph{i} + 1 et allant de \emph{i} à \emph{i −} 1 (modulo
+\emph{n}).
+
+\textbf{Algorithme 1}
+
+L'algorithme proposé marche par phase et est basé sur le ﬁltrage. Les
+sites peuvent être dans deux états perdant ou actif. Lorsqu'un site
+reçoit un message contenant une valeur plus grande, il devient perdant.
+
+A chaque phase \emph{j}, les sites encore actifs envoient leur valeur à
+une distance de 2\emph{j}d'eux. Lorsqu'un site actif reçoit un tel
+message, il devient perdant si la valeur reçue est supérieure à la
+sienne sinon il passe à la phase suivante.
+
+Nous allons supposer ici que le réseau est synchrone par phase.
+C'est-à-dire que les actifs au début de la phase \emph{j} commencent
+tous en même temps à exécuter les opérations de cette phase.
+
+\begin{quote}
+1. Donner un exemple d'exécution sur un anneau de 8 sommets.
+
+2. Après la phase \emph{j}, quelle est la distance minimale entre les
+deux sites actifs ?
+
+3. Combien y a-t-il de phases ?
+
+4. Donner le nombre de messages échangés.
+
+5. Qui connaît le gagnant ?
+
+6. Donner l'algorithme.
+
+7. Quel est l'inconvénient sur le nombre de messages
+\end{quote}
+
+\textbf{Algorithme 2}\\
+Voici un algorithme d'élection :
+
+Lors du r\{\textbackslash'e\}veil du site i\\
+\{\textbackslash'e\}tat(i) :=actif ;\\
+tant que (\{\textbackslash'e\}tat(i) ==actif) faire\\
+envoyer(val(i)) \{\textbackslash`a\} gauche\\
+envoyer(val(i)) \{\textbackslash`a\} droite\\
+Attendre un message Val(g) venant de gauche ; Attendre un message Val(d)
+venant de droite ; V:=max\{Val(g), Val(d)\};\\
+si ( V \textgreater= val(i)) alors \{\textbackslash'e\}tat(i) :=passif ;
+si ( V == val(i)) alors\\
+gagnant(i)=i ;\\
+Pr\{\textbackslash'e\}venir les autres sites.
+
+\begin{quote}
+sinon faire suivre tous les messages.
+
+1. En quoi cet algorithme est-il diﬀérent du précèdent ? Peut-on
+remplacer \emph{≥} par \emph{\textgreater{}} ?
+
+2. En déduire le nombre de messages échangés pendant l'algorithme.
+\end{quote}
+
+
+\end{document}

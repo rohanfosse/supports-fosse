@@ -1,0 +1,102 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{color,pxfonts,fix-cm}
+\usepackage{latexsym}
+\usepackage[mathletters]{ucs}
+\DeclareUnicodeCharacter{46}{\textperiodcentered}
+\DeclareUnicodeCharacter{8594}{$\rightarrow$}
+\DeclareUnicodeCharacter{58}{$\colon$}
+\DeclareUnicodeCharacter{60}{\textless}
+\DeclareUnicodeCharacter{62}{\textgreater}
+\DeclareUnicodeCharacter{8592}{$\leftarrow$}
+\DeclareUnicodeCharacter{8805}{$\geq$}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage{pict2e}
+\usepackage{wasysym}
+\usepackage[english]{babel}
+\usepackage{tikz}
+\pagestyle{empty}
+\usepackage[margin=1in,paperwidth=595pt,paperheight=841pt]{geometry}
+
+\usepackage{enumitem}
+
+
+\title{Election d'un leader}
+
+
+\begin{document}
+
+\maketitle
+
+
+On considère un réseau constitué de $n$ sites $0,\ldots,n - 1$. Chaque site $i$ a une valeur $val_i$ avec $val_i$ deux à deux distincts. Le leader est le site avec la plus grande valeur $val_i$. A un moment donné, l'un des sites veut initier une élection c'est-à-dire initier un algorithme distribué qui a pour but de déterminer lequel des sites est le leader.
+
+
+\section*{Élection dans un anneau unidirectionnel}
+Le réseau est organisé en cycle unidirectionnel : les communications élémentaires entre sites voisins sont des communications allant de $i$ à $i + 1$ (modulo $n$).\\
+On propose l'algorithme suivant pour le site $i$.\\
+
+\begin{itemize}[noitemsep]
+    \item[] Initialisation de l'élection ou $1^{ere}$ réception de message $\rightarrow$
+    \begin{enumerate}[noitemsep]
+        \item envoyer le message $<1, val_i>$ à $succ_i$
+        \item $etat_i$ $\leftarrow$ $actif$
+        \item $max_i$ $\leftarrow$ $val_i$
+    \end{enumerate}
+    \item[] Réception du message $<1, V>$ $\rightarrow$
+    \begin{enumerate}[noitemsep]
+        \item si ($etat_i == actif$) alors
+        \begin{enumerate}
+            \item si ($V != max_i)$ alors $envoyer(<2, V>); voisin_i = V$
+            \item sinon $max_i$ est élu, prévenir les autres
+        \end{enumerate}
+        \item Sinon envoyer le message $<1, V>$ à $succ_i$
+    \end{enumerate}
+    \item[] Réception du message $<2, V>$ $\rightarrow$
+    \begin{enumerate}[noitemsep]
+        \item si ($etat_i == actif$) alors
+        \begin{enumerate}
+            \item si $voisin_i > V$ et $voisin > max_i$ alors
+            \begin{enumerate}
+                \item $max_i \leftarrow voisin_i$
+                \item envoyer < 1, $max_i$ > à $succ_i$
+            \end{enumerate}
+            \item Sinon $etat_i \leftarrow passif$
+        \end{enumerate}
+        \item sinon envoyer $(<2, V>)$ à $succ_i$
+    \end{enumerate}
+\end{itemize}
+
+\subsection*{Question 1:} Appliquer cet algorithme sur un exemple sur un anneau d'au moins 4 sites sachant qu'un seul processeur initie l'élection.
+
+\subsection*{Question 2:} A quoi servent les variables locales $max_i$, $etat_i$, $voisin_i$ du site $i$ ? A quoi servent les deux messages ?
+
+\subsection*{Question 3:} Par qui peut-être proclamé le résultat ?
+
+\subsection*{Question 4:} Quelle est la complexité de l'algorithme en nombre de messages (au pire des cas) lors que tous les sites commencent l'élection en même temps ?
+
+
+\section*{Election dans un anneau bidirectionnel.}
+
+Le réseau est organisé en cycle nidirectionnel : les communications
+élémentaires entre sites voisins sont des communications allant de
+\emph{i} à \emph{i} + 1 et allant de \emph{i} à \emph{i −} 1 (modulo
+\emph{n}).
+
+\subsection*{Algorithme 1}
+
+L'algorithme proposé marche par phase et est basé sur le filtrage. Les
+sites peuvent être dans deux états perdant ou actif. Lorsqu'un site
+reçoit un message contenant une valeur plus grande, il devient perdant.
+
+A chaque phase \emph{j}, les sites encore actifs envoient leur valeur à
+une distance de 2\emph{j}d'eux. Lorsqu'un site actif reçoit un tel
+message, il devient perdant si la valeur reçue est supérieure à la
+sienne sinon il passe à la phase suivante.
+
+Nous allons supposer ici que le réseau est synchrone par phase.
+C'est-à-dire que les actifs au début de la phase \emph{j} commencent
+tous en même temps à exécuter les opérations de cette phase.
+
+\end{document}

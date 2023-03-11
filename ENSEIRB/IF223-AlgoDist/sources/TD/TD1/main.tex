@@ -1,0 +1,116 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{a4wide}
+\usepackage{comment}
+\usepackage[pdftex]{graphicx}
+\usepackage{epstopdf}
+\newcommand{\cmd}[1]{\texttt{#1}}
+\newcommand{\remove}{}
+\newcommand{\dir}[1]{\textsf{#1}}
+\newcommand{\pop}{Depiler\xspace}
+\newcommand{\push}{Empiler\xspace}
+\newcommand{\tete}{LireTete}
+\newcommand{\sommet}{LireSommet}
+\newcommand{\empt}{EstVide}
+\newcommand{\enqueue}{Enfiler\xspace}
+\newcommand{\dequeue}{Defiler\xspace}
+\newcommand{\get}{\ensuremath{\leftarrow\ }}
+\usepackage{enumitem}
+\usepackage{pifont}
+
+
+\usepackage{comment}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{tcolorbox}
+
+\newtcolorbox{mybox}[3][]
+{
+  colframe = #2!25,
+  colback  = #2!10,
+  coltitle = #2!20!black,  
+  title    = {#3},
+  #1,
+}
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
+
+
+\excludecomment{solution}
+\includecomment{solution}
+
+\title{IF223 - Algorithmique Distribuée - TD1 :\\ Exclusion mutuelle avec des primitives}
+\date{28 Février 2022}
+\author{Rohan Fossé}
+\date{\texttt{rfosse@labri.fr}}
+
+
+\begin{document}
+\maketitle
+
+Dans tous les exercices qui suivent nous faisons l’hypothèse qu'aucun des processus n'est fautif.
+\underline{Rappel:} \texttt{await(condition)} impose au processus d’attendre tant que  \texttt{condition} n’est pas vérifiée.
+
+
+\section*{Exercice 1}
+
+Ecrire un algorithme qui résout le problème de l’exclusion mutuelle pour n processus. L’algorithme doit assurer la propriété d’absence d’interblocages (\textit{deadlock-freedom}).\\
+Vous avez à disposition un objet partagé linéarisable dit \textit{test\&set}. La valeur initial d’un objet x de type test\&set est 0. L’état de l’objet peut être 0 ou 1.\\
+
+Il peut être manipulé à l’aide des méthodes suivantes :
+\begin{itemize}
+    \item[--] $x.test\&set()$ écrit la valeur 1 en x et retourne la valeur précédente.
+    \item[--] $x.reset()$ écrit la valeur 0 en x.
+\end{itemize}
+
+Dire si l’algorithme proposé garantit la propriété de \textit{starvation−freedom}. Justifier la réponse.
+
+
+\section*{Exercice 2}
+
+Ecrire un algorithme qui résout le problème de l’exclusion mutuelle pour n processus. Chaque processus a un identifiant unique dans l’ensemble des valeurs \{1, 2,$\ldots$, n\}. L’algorithme doit assurer la propriété \textit{starvation−freedom}. Vous avez à disposition une file partagée linéarisable, nommé q. Au début la file est vide. Les méthodes pour la manipuler sont :
+\begin{itemize}
+    \item[--] $q.Enfiler(v)$ insère la valeur $v$ dans la file
+    \item[--] $q.Defiler()$ qui retourne la valeur en tête et la supprime de la file
+    \item[--] $q.Tete()$ qui retourne la valeur en tête de la file. Cette méthode ne change pas l’état de la file.
+\end{itemize}
+
+\newpage 
+\section*{Exercice 3}
+
+\begin{tcolorbox}
+\texttt{Algorithme 1 : Programme pour le processus \textit{i}}\\
+  \begin{algorithmic}[1]
+      \Let{$\texttt{Flag[i]}$}{$\texttt{true;}$}
+      \State $\text{\texttt{\textbf{await}(\textit{Turn} = i \texttt{or} (Flag[\textit{Turn}] = false))}}$
+      \State $\text{\texttt{\textbf{await}(\textit{x.Test}\&\textit{Set} = 0)}}$
+      \State $\text{\texttt{section critique};}$
+      \Let{$\texttt{Flag[i]}$}{$\texttt{false;}$}
+      \If{$\texttt{(Flag[\textit{Turn}] = false)}$}
+         \Let{$\texttt{Turn}$}{$\texttt{(Turn + 1) mod n}$}
+      \EndIf
+      \State $\text{\texttt{x.reset};}$
+  \end{algorithmic}
+\end{tcolorbox}
+
+L’algorithme 1 résout le problème de l’exclusion mutuelle pour n processus. Chaque processus a un identifiant unique dans l’ensemble des valeurs \{1, 2, \ldots , n\}.
+\begin{itemize}
+    \item[--] x est un objet partagé linéarisable de type $test\&set$ (décrit à la question 1).
+    \item[--] $Flag$ est un tableau de n cases tel que pour tout i = 1, . . . n, $Flag[i]$ est un registre linéarisable dont la valeur peut être $true$ ou $false$. La valeur initiale de chaque registre est $false$.
+    \item[--] $Turn$ est un registre linéarisable dont la valeur $\in$ \{1, 2, \ldots , n\}. La valeur initiale est 1.
+\end{itemize}
+
+\begin{enumerate}
+    \item On suppose que les processus 1 et 2 sont les seuls à vouloir entrer en section critique. Est-il possible
+que le processus 2 entre en section critique avant le processus 1 ? Justifier.
+    \item Quelle propriété assurent les lignes 1, 2, 5 et 6 de l’algorithme ?
+\end{enumerate}
+\end{document}
+
+
+
+
+
