@@ -1,0 +1,68 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{a4wide}
+\usepackage{comment}
+\usepackage[pdftex]{graphicx}
+\usepackage{epstopdf}
+\newcommand{\cmd}[1]{\texttt{#1}}
+\newcommand{\remove}{}
+\newcommand{\dir}[1]{\textsf{#1}}
+\newcommand{\pop}{Depiler\xspace}
+\newcommand{\push}{Empiler\xspace}
+\newcommand{\tete}{LireTete}
+\newcommand{\sommet}{LireSommet}
+\newcommand{\empt}{EstVide}
+\newcommand{\enqueue}{Enfiler\xspace}
+\newcommand{\dequeue}{Defiler\xspace}
+\newcommand{\get}{\ensuremath{\leftarrow\ }}
+
+\excludecomment{solution}
+\includecomment{solution}
+
+\title{IF111 - Algorithmes et structures de données-TD2 :\\ Piles, Files et Listes}
+\date{}
+\author{\underline{Jonathan Narboni}, Rohan Fossé}
+\date{\underline{\texttt{jonathan.narboni@labri.fr}}, \texttt{rfosse@labri.fr}}
+
+
+\begin{document}
+\maketitle
+
+\section*{Exercice 1}
+On dispose d'une pile contenant des nombres entiers. Écrire un algorithme qui permet d'afficher le contenu de la pile. On veut voir s'afficher dans l'ordre le sommet, le second élément, et ainsi de suite. On prendra soin que la pile, à l'issue de l'affichage, contienne les mêmes éléments \emph{dans le même ordre}. L'algorithme utilise une pile auxiliaire. Comment modifier cet algorithme pour afficher les éléments dans l'ordre inverse ?
+
+
+
+
+\section*{Exercice 2}
+On veut écrire des algorithmes pour manipuler des files et des piles. Les algorithme peuvent utiliser des piles et des files auxiliaires.  
+\begin{itemize}
+\item On se donne une pile $P1$ contenant des entiers positifs. Ecrire un algorithme pour déplacer les entiers de $P1$ dans une pile $P2$ de façon à avoir dans $P2$ tous les nombres pairs en dessous des nombres impairs. L'algorithme prend en entrée $P1$ et $P2$ et utilise $O(1)$ mémoire auxiliaire.
+\item Ecrire un algorithme qui renverse une file. Faites de m\^eme pour une pile.
+%Arrivé après la correction de cet exo pour le $T1_G1$
+
+\item En utilisant seulement des files, écrire un algorithme qui prend en entrée une file $F$ contenant les éléments triés en ordre croissant (la tête est le plus petit élément de la file) et un élément $e$ à enfiler. L'algorithme retournera la file $F$ contenant l'élément $e$ tout en préservant l'ordre croissant des éléments. 
+
+\end{itemize}
+
+\section*{Exercice 3}
+On veut implémenter une file en utilisant deux piles. Écrire les opérations suivantes : \texttt{EstVide(F)}, 
+retourne vrai si la file est vide, faux sinon; \texttt{Enfiler(F,e)} qui insère $e$ en queue de la file $F$, \texttt{Defiler(F)}
+retourne l’ élément de tête et le supprime de la file, \texttt{Tête(F)} qui retourne l’ élément de tête sans le supprimer de la file.
+Pour toute pile $P$ vous avez à disposition les opérations de base suivantes pour la manipuler : \texttt{EstVide(P)},  \texttt{Empiler(P,e)}, \texttt{Depiler(P)} et \texttt{Sommet(P)}.
+
+\section*{Exercice 4}
+On veut manipuler des listes. Écrivez les fonctions suivantes de manière récursive en utilisant les primitives \texttt{tête(L)}, \texttt{queue(L)} et \texttt{estVide(L)}. %\texttt{creerListeVide()},  et \texttt{ajouterEnTête(a,L)}.
+(on suppose que toutes les listes contiennent des entiers) 
+\begin{enumerate}
+ \item paire(L) qui retourne $vrai$ si la liste L ne contient que des entiers pairs, $faux$ sinon.
+%\item additionner(x, L) qui ajoute x à chaque élément de la liste L. 
+\item avant$\_$dernier(L) qui renvoie l'avant-dernier élément de la liste L s'il existe, $faux$ sinon.
+%\item apparait(x, n, L) qui retourne $vrai$ si x apparait au moins $n\geq 0$ fois dans L, $faux$ sinon.
+%\item alterne(L) qui teste si L est alterné,  c'est-à-dire si son premier élément est plus petit que le second, que le second est plus grand que le troisième, le troisième est plus petit que le quatrième, le quatrième plus grand que le cinquième et ainsi de suite.
+\end{enumerate}
+\end{document}

@@ -1,0 +1,310 @@
+\documentclass{article}[12pt]
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amssymb,amsmath,subfigure}
+\usepackage[pdftex]{graphicx}
+\usepackage{epstopdf}
+\usepackage{vmargin}
+\usepackage{comment}
+\usepackage{tikz,multicol}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{tcolorbox}
+
+\newtcolorbox{mybox}[3][]
+{
+  colframe = #2!25,
+  colback  = #2!10,
+  coltitle = #2!20!black,  
+  title    = {#3},
+  #1,
+}
+
+
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
+\algrenewcommand\algorithmicrequire{\textbf{Precondition:}}
+\algrenewcommand\algorithmicensure{\textbf{Postcondition:}}
+
+
+
+
+\excludecomment{solution}
+%\includecomment{solution}
+
+\title{IF111 - Algorithmes et structures de données\\EI2 - Récursivité et Diviser pour régner}
+\date{\texttt{rfosse@labri.fr}}
+\author{Rohan Fossé}
+\begin{document}
+
+
+
+\maketitle{}
+
+\section{Récursivité}
+
+\subsection*{Exercice 1.1}
+Pour chacune des fonctions suivantes, dire pour quelles valeurs du paramètre $n$ elle termine et ce qu'elle fait ou calcule. Ces fonctions sont-elles récursives terminales ?
+
+\begin{tcolorbox}
+        \begin{algorithmic}[1]
+    \Function{$f$}{$n$}
+    \If{\text{$n == 0$}}
+        \State\text{\textbf{return}} 1
+    \Else
+        \State\text{\textbf{return}} $f(n+1)$
+    \EndIf
+  \EndFunction
+  \end{algorithmic}
+  
+        \begin{algorithmic}[1]
+    \Function{$sommeBis$}{$n$}
+    \If{\text{$n == 0$}}
+        \State\text{\textbf{return}} 0
+    \Else
+        \Let{$result$}{$sommeBis(n - 1)$}
+        \Let{$result$}{$result + n$}
+        \State\text{\textbf{return}} $result$
+    \EndIf
+  \EndFunction
+  \end{algorithmic}
+  
+        \begin{algorithmic}[1]
+    \Function{$g$}{$n$}
+    \If{\text{$n <= 1$}}
+        \State\text{\textbf{return}} $1$
+    \Else
+        \State\text{\textbf{return}} $1 + g(n - 2)$
+    \EndIf
+  \EndFunction
+  \end{algorithmic}
+ \end{tcolorbox} 
+
+
+\subsection*{Exercice 1.2}
+
+Construire la forme récursive de la fonction $g()$ définie ci-dessous.
+
+\begin{tcolorbox}
+        \begin{algorithmic}[1]
+    \Function{$g$}{$n$}
+    \Let{$i$}{$0$}
+    \For{\text{$i < n$}}
+        \State\text{afficher(i)}
+    \EndFor
+  \EndFunction
+  \end{algorithmic}
+
+ \end{tcolorbox} 
+
+\subsection*{Exercice 1.3}
+
+Écrire une fonction récursive qui calcule la somme de nombres de 1 à n, si n $>$ 0 et renvoie 0 sinon. 
+Quelle est la complexité ?
+
+\subsection*{Exercice 1.4}
+
+Donner un algorithme récursif pour calculer $x^n$ , x et n positifs non nuls. Quelle est la
+complexité ?
+Peut-on calculer $x^n$ avec moins de multiplications ?
+
+\subsection*{Exercice 1.5}
+
+Écrire une fonction récursive $pgcd(m, n)$ qui calcule le plus grand diviseur commun des deux entiers (non-négatifs) m et n.
+
+
+\subsection*{Exercice 1.6}
+
+Écrire un algorithme récursif qui prend un paramètre n et qui teste si n contient au moins un zéro dans son écriture en base 10. On fait ici la convention que l’écriture en base 10 de zéro est zéro.\\
+Quelle est la complexité de cet algorithme ?
+
+
+\subsection*{Exercice 1.7}
+
+On considère les fonctions mutuellement récursives suivantes :
+
+\begin{tcolorbox}
+        \begin{algorithmic}[1]
+    \Function{$u$}{$n$}
+    \If{$n == 0$}
+        \State\text{\textbf{return}} $1$
+    \Else
+        \State\text{\textbf{return}} $u(n - 1) + v(n - 1)$
+    \EndIf
+  \EndFunction
+  \Statex
+      \Function{$v$}{$n$}
+    \If{$n == 0$}
+        \State\text{\textbf{return}} $0$
+    \Else
+        \State\text{\textbf{return}} $2 * u(n - 1) + v(n - 1)$
+    \EndIf
+  \EndFunction
+  \end{algorithmic}
+
+ \end{tcolorbox} 
+
+\begin{enumerate}
+    \item Calculer u(0), u(1), u(2), u(3), v(0), v(1), v(2) et v(3).
+    \item Montrer que la suite ($u_n$) vérifie la
+récurrence, $u_{n+2}$ = $2u_{n+1} + u_n$.
+\end{enumerate}
+
+
+\subsection*{Exercice 1.8}
+Décrire une fonction récursive qui, étant donné un entier $x$, détermine la valeur la plus proche de $x$ dans un tableau d’entiers.
+
+
+
+
+
+\section{Diviser pour régner}
+
+\subsection*{Exercice 2.1}
+
+Un site internet cherche à regrouper ses membres en fonction des goûts musicaux de chacun. Pour cela,
+chaque membre doit classer par ordre de préférence une liste d’artistes 1. \\
+
+On dit que deux membres, Arthur et Béatrice, ont des goûts musicaux proches lorsque qu’il y a peu d’inversions dans leurs clas-sements : une inversion est une paire d’artiste ${L, M}$ telle qu’Arthur préfère $L$ à $M$ et Béatrice préfère
+$M$ à $L$.
+
+On cherche donc à compter le nombre d’inversion dans les classements d’Arthur et Béatrice.
+
+
+\begin{enumerate}
+    \item Compter le nombre d’inversion les classements suivants :
+        \begin{itemize}
+            \item[] \underline{Arthur:} Britney Spears, Lady Gaga, Michael Jackson, Madonna, Céline Dion ;
+            \item[] \underline{Béatrice:} Lady Gaga, Madonna, Britney Spears, Michael Jackson, Céline Dion.
+        \end{itemize}
+    \item  Proposer un algorithme naïf qui résout le problème. Quelle est sa complexité ?\\
+    
+ On cherche maintenant à améliorer l’algorithme précédent en utilisant le paradigme Diviser-Pour-
+Régner. Pour cela, on coupe le classement de chaque membre en deux sous-classements de même taille,
+celui des artistes préférés (classement supérieur) et celui des autres artistes (classement inférieur). On
+compte alors les inversions (L, M) qui peuvent être de deux types : soit L et M apparaissent dans le
+même sous-classement de Béatrice, soit L et M apparaissent dans deux différents sous-classements de
+Béatrice (inversions mixtes).
+
+    \item On suppose que les deux sous-classements de Béatrice sont triés en fonction du classement d’Arthur. Montrer qu’on peut alors compter les inversions mixtes en temps linéaire.
+    
+    \item Donner un algorithme de type Diviser-Pour-Régner qui fonctionne en temps $\mathcal{O}$(n log n).
+\end{enumerate}
+
+
+
+
+\subsection*{Exercice 2.2}
+Écrire un algorithme diviser-pour-regner pour calculer la position du plus grand élément d'un tableau d'entiers.\\ Écrire la récurrence pour le nombre de comparaisons faites par l'algorithme (on comptera seulement les comparaisons entre les éléments du tableau).
+
+\subsection*{Exercice 2.3} 
+Soit E une suite de $n$ éléments rangés dans un tableau $E[1..n]$. On dit qu’un élément $x\in E$ est \emph{majoritaire} si le cardinal de l'ensemble $E_x$=\{$y\in E$ tel que $y=x\}$ est strictement plus de $\frac{n}{2}$. On supposera que $n$ est une puissance de 2. 
+On suppose que la seule opération qu’on sait effectuer sur les éléments du tableau est de lire la valeur d'un élément et de vérifier si deux éléments sont égaux ou non.
+\begin{enumerate}
+\item \'Ecrire un algorithme itératif pour vérifier si $E$ possède un élément \emph{majoritaire}. L'algorithme retourne la couple $(x,c_x)$ si $x$ est l' élément \emph{majoritaire} avec $c_x$ occurrences et la couple $(-,0)$ autrement.
+
+Quel est le nombre de comparaisons à faire dans le pire des cas?
+
+\item En s'appuyant sur la technique \emph{diviser pour régner}, donner un algorithme récursif basé sur un découpage de $E$ en deux sous-tableaux de même taille. L'algorithme $Majoritaire(E,i,j)$ retourne la couple $(x,c_x)$ si $x$ est l' élément \emph{majoritaire} avec $c_x$ occurrences dans le (sous)tableau $E[i..j]$ et la couple $(-,0)$ autrement. L'appel initial sera $Majoritaire(E,1,n)$. L'algorithme utilisera un algorithme $Occurence(E,x,i,j)$ qui retourne le nombre d'occurrence de $x$ dans le (sous)tableau $E[i,j]$.
+
+Donner le nombre de comparaisons faites par l'algorithme pour un tableau de taille $n$. L'algorithme $Occurence(E,x,i,j)$ exécute un nombre de comparaisons linéaire dans la taille du tableau $E[i,j]$.
+
+%Calculer la récurrence correspondante et la résoudre avec la méthode de l'arbre récursif.
+\end{enumerate}
+
+\subsection*{Exercice 2.4} On veut compter le nombre de $0$ dans un tableau $T$ de $n$ cases. Chaque case de $T$ contient $0$ ou $1$ et tous les $0$ précédent les $1$. Ecrire un algorithme récursif qui détermine le nombre de $0$ en $O(logn)$ opérations élémentaires. Pour cet algorithme on s'inspirera à la recherche par dichotomie.
+
+
+\section{Complexité et master theorem}
+
+
+  \subsection*{Exercice 3.1}
+  On suppose qu'on dispose d'un tableau trié $tab$ dans lequel on cherche la position d'une valeur $x$ (avec la convention que la position est $ -1 $ si $x$ n'apparaît pas dans $tab$). On propose la fonction de recherche suivante dans laquelle l'opération $tab[a:b]$ construit un tableau constitué des cases de $tab$ d'indices compris au sens large entre $a$ et $b$ :
+  
+\begin{tcolorbox}
+        \begin{algorithmic}[1]
+    \Function{$search$}{$x,tab$}
+    \If{\text{$tab.length == 0$}}
+        \State\text{\textbf{return}} -1
+    \EndIf
+    \If{\text{$tab.length == 1$}}
+        \If{\text{$tab[0] == x$}}
+            \State\text{\textbf{return}} 0
+        \Else
+        \State \text{\textbf{return}} -1
+        \EndIf
+    \Else
+        \Let{$pos$}{$\text{tab.length/2}$}
+        \If{$\text{tab[pos] == x}$}
+            \State \text{\textbf{return}} pos
+        \EndIf
+        \If{$\text{tab[pos]} < x$}
+            \Let{$subpos$}{$search(x,tab[(pos + 1):(tab.length - 1)])$}
+            \If{$subpros >= 0$}
+                \State \text{\textbf{return} subpos + pos + 1}
+            \Else
+                \State \text{\textbf{return} -1}
+            \EndIf
+        \Else
+            \Let{$subpos$}{$search(x,tab[0:(pos - 1)])$}
+            \If{$subpos >= 0$}
+                \State \text{\textbf{return} subpos}
+            \Else
+                \State \text{\textbf{return} -1}
+            \EndIf
+            
+        \EndIf
+    \EndIf
+  \EndFunction
+  \end{algorithmic}
+ \end{tcolorbox} 
+  
+  
+  \begin{enumerate}
+      \item En supposant que l'opération $tab[a:b]$ peut être réalisée en temps constant, calculer la complexité en temps dans le cas le pire de ce programme en fonction de la longueur de $tab$.
+      \item En supposant que l'opération $tab[a:b]$ peut être réalisée en temps $\mathcal{O}(b-a+1)$, calculer la complexité en temps dans le cas le pire de ce programme en fonction de la longueur de $tab$.
+  \end{enumerate}
+  
+  \subsection*{Exercice 3.2}
+  
+  On considère l'algorithme d'exponentiation rapide classique implémenté par la fonction suivante
+  
+  \begin{tcolorbox}
+\begin{algorithmic}[1]
+    \Function{$fastpow$}{$x,n$}
+    \If{$\text{n == 0}$}
+        \State\text{\textbf{return} 1}
+    \EndIf
+    \If{$\text{n == 1}$}
+        \State\text{\textbf{return} x}
+    \EndIf
+    \If{$\text{n \% 2 == 0}$}
+        \State\text{$\textbf{return} fastpow(x * x, n / 2)$}
+    \Else
+        \State\text{$\textbf{return}  x * fastpow(x * x, n / 2)$}
+    \EndIf
+
+  \EndFunction
+  \end{algorithmic}
+\end{tcolorbox}  
+  
+  A l'aide du théorème maître, calculer la complexité en temps de cette fonction.
+  
+
+\subsection*{Exercice 3.3}
+Donner la complexité des récurrences suivantes grace au \textit{master theorem}.
+\begin{enumerate}
+\item $T(n)=4T(n/2)+n$
+\begin{solution}
+\begin{tabbing} $b=2$, $a=4$, $d=1$ $d<log_2(4)$ $T(n)=O(n^2)$ cas 3 du théorème 
+\end{tabbing}
+\end{solution}
+\item $T(n)=4T(n/2)+n^2$
+\begin{solution}
+\begin{tabbing} $b=2$, $a=4$, $d=2$ $d=log_2(4)$ $T(n)=O(n^2logn)$ cas 2 du théorème 
+\end{tabbing}
+\end{solution}
+\end{enumerate}
+
+
+\end{document}

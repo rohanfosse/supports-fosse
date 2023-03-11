@@ -1,0 +1,456 @@
+\documentclass{article}[12pt]
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amssymb,amsmath,subfigure}
+\usepackage[pdftex]{graphicx}
+\usepackage{epstopdf}
+\usepackage{vmargin}
+\usepackage{comment}
+\usepackage{tikz,multicol}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{tcolorbox}
+
+\newtcolorbox{mybox}[3][]
+{
+  colframe = #2!25,
+  colback  = #2!10,
+  coltitle = #2!20!black,  
+  title    = {#3},
+  #1,
+}
+
+
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
+\algrenewcommand\algorithmicrequire{\textbf{Precondition:}}
+\algrenewcommand\algorithmicensure{\textbf{Postcondition:}}
+
+
+
+
+\excludecomment{solution}
+%\includecomment{solution}
+
+\title{IF111 - Algorithmes et structures de données\\EI1 - Complexité et notation asymptotique}
+\date{\texttt{rfosse@labri.fr}}
+\author{Rohan Fossé}
+\begin{document}
+
+
+
+\maketitle{}
+Dans les exercices, sauf mention contraire, on réalisera toutes les analyses dans le pire cas et on donnera toujours les complexités demandées sous la forme d'un équivalent simple en $\mathcal{O}$.
+
+
+\section{Complexité des algorithmes}
+
+\subsection*{Exercice 1.1}
+
+
+
+Pour chacune des fonctions suivantes, déterminer la complexité asymptotique dans la notation $\mathcal{O}$.
+\begin{tcolorbox}
+\begin{enumerate}
+    \item $T_1(n) = 6n^3 + 10n^2 + 5n + 2$
+    \item $T_2(n) = 3log_2n + 4$
+    \item $T_3(n) = 2^n + 6n^2 + 7n $
+    \item $T_4(n) = 7k + 2$
+    \item $T_5(n) = 4log_2n + n$
+    \item $T_6(n) = 2log_{10}k + kn^2$
+\end{enumerate}
+\end{tcolorbox}
+
+\subsection*{Exercice 1.2}
+
+Considérons les deux algorithmes $A_1$ et $A_2$ avec leurs temps d'exécution $T_1(n) = 9n^2$ et $T_2(n) = 100n + 96$ respectifs.
+
+\begin{enumerate}
+    \item Déterminer la complexité asymptotique des deux algorithmes. Quel algorithme a la meilleure complexité asymptotique ?
+    \item Calculer les temps maximales d'exécution des deux algorithmes pour $n = 1$, $n = 3$, $n = 5$, $n = 10$, $n = 14$.
+    \item Quel est l'intervalle des valeurs de n sur lequel l'algorithme $A_1$ est plus efficace que l'algorithme $A_2$ ?
+\end{enumerate}
+
+\subsection*{Exercice 1.3}
+
+Considérer les deux matrices carrées $A$ et $B$ de taille $n$ :
+
+\[
+  A = 
+  \begin{pmatrix}
+    a_{11} & a_{12} & \cdots & a_{1n}\\
+    a_{21} & a_{22} & \cdots & a_{2n}\\
+    \cdots & \cdots & \cdots & \cdots\\
+    a_{n1} & a_{n2} &\cdots & a_{nn}
+  \end{pmatrix}
+  , B = 
+  \begin{pmatrix}
+    b_{11} & b_{12} & \cdots & b_{1n}\\
+    b_{21} & b_{22} & \cdots & b_{2n}\\
+    \cdots & \cdots & \cdots & \cdots\\
+    b_{n1} & b_{n2} &\cdots & b_{nn}
+  \end{pmatrix}
+\]
+
+l'addition de ces deux matrices donne la matrice $C$ quadratique de taille $n$:
+
+\[
+  C = 
+  \begin{pmatrix}
+    c_{11} & c_{12} & \cdots & c_{1n}\\
+    c_{21} & c_{22} & \cdots & c_{2n}\\
+    \cdots & \cdots & \cdots & \cdots\\
+    c_{n1} & c_{n2} &\cdots & c_{nn}
+  \end{pmatrix}
+\]
+avec
+\begin{equation*}
+    c_{ij} = a_{ij} + b_{ij} \forall i, \forall j
+\end{equation*}
+
+\begin{enumerate}
+    \item Écrire un algorithme qui effectue l'addition des deux matrices $A$ et $B$ et stocke les résultats dans $C$;
+    \item Déterminer la complexité $\mathcal{O}$ de l'algorithme pour des matrices de taille $n$.
+\end{enumerate}
+
+\section{Programmes itératifs}
+
+\subsection*{Exercice 2.1}
+
+Donner la complexité en temps du programme suivant en fonction du paramètre $n$ :
+
+\begin{tcolorbox}
+  \begin{algorithmic}[1]
+    \Statex
+      \Let{$i$}{$0$}
+      \Let{$j$}{$0$}
+      \While{$i < n$}
+        \If{$\text{i \% 2 == 0}$}
+          \Let{$j$}{$j + 1$}
+         \Else
+          \Let{$j$}{$j / 2$}
+        \EndIf
+      \Let{$i$}{$i + 1$} 
+      \EndWhile
+  \end{algorithmic}
+\end{tcolorbox}
+
+
+\subsection*{Exercice 2.2}
+
+On rappelle que si la variable $tab$ contient un tableau, alors $tab.length$ donne la longueur du tableau et $tab[i]$ permet d'accéder à sa case numéro $i$ (la numérotation commence à 0). Donner la complexité en temps du programme suivant en fonction de la longueur du paramètre $tab$ :
+
+\begin{tcolorbox}
+  \begin{algorithmic}[1]
+    \Statex
+      \Let{$x$}{$0$}
+      \Let{$i$}{$1$}
+      \Let{$j$}{$0$}
+      \For{$i < tab.length - 1$}
+          \For{$j < 3 $}
+          \Let{$x$}{$x + tab[i - 1 + j] * ( j + 1 )$}
+          \EndFor
+      \EndFor
+  \end{algorithmic}
+\end{tcolorbox}
+
+
+\subsection*{Exercice 2.3}
+Soit le programme suivant, dépendant des tableaux $tab$ et $filter$ :
+\begin{tcolorbox}
+  \begin{algorithmic}[1]
+    \Statex
+      \Let{$x$}{$0$}
+      \Let{$i$}{$1$}
+      \Let{$j$}{$0$}
+      \For{$i < tab.length - filter.length$}
+          \For{$j < filter.length$}
+          \Let{$x$}{$x + tab[i + j] * filter[j]$}
+          \EndFor
+      \EndFor
+  \end{algorithmic}
+\end{tcolorbox}
+
+Calculer la complexité en temps du programme en fonction des longueurs des deux tableaux.
+
+\subsection*{Exercice 2.4}
+On cherche à déterminer le minimum et le maximum d'un tableau. On propose d'abord la solution suivante :
+\begin{tcolorbox}
+  \begin{algorithmic}[1]
+  \Function{$Solution_1$}{$tab$}
+      \Let{$min$}{$tab[0]$}
+      \Let{$max$}{$tab[0]$}
+      \Let{$i$}{$0$}
+      \For{$i < tab.length $}
+        \If{$tab[i] < min$}
+          \Let{$min$}{$tab[i]$}
+         \Else\If{$tab[i] > max$}
+          \Let{$max$}{$tab[i]$}
+        \EndIf
+        \EndIf
+      \EndFor
+  \EndFunction
+  \end{algorithmic}
+\end{tcolorbox}
+
+\begin{enumerate}
+    \item Calculer le nombre exact de comparaisons effectuées dans le pire cas en fonction de la longueur du tableau. On ne comptera que les comparaisons entre les éléments du tableau et le contenu des variables $min$ et $max$
+    \item Pour toute longueur $n$, donner un exemple de tableau de longueur $n$ correspondant au cas le pire.
+\end{enumerate}
+
+
+On propose la variante suivante :
+\begin{tcolorbox}
+  \begin{algorithmic}[1]
+  \Function{$Solution_2$}{$tab$}
+    \If{$tab.length\text{ \% 2} == 1$}
+          \Let{$min$}{$tab[0]$}
+          \Let{$max$}{$tab[0]$}
+          \Let{$start$}{$1$}
+          
+         \Else\If{$tab[0] < tab[1]$}
+         \Let{$min$}{$tab[0]$}
+          \Let{$max$}{$tab[1]$}
+          
+          \Else
+            \Let{$min$}{$tab[1]$}
+          \Let{$max$}{$tab[0]$}
+          \EndIf
+        
+        \Let{$start$}{$2$}
+    \EndIf
+    
+    
+      \Let{$i$}{$start$}
+      \For{$i < tab.length $}
+        \If{$tab[i] < tab[i+1]$}
+            \If{$tab[i] < min$}
+          \Let{$min$}{$tab[i]$}
+            \EndIf
+         \If{$tab[i + 1] > max$}
+          \Let{$max$}{$tab[i + 1]$}
+        \EndIf
+        \Else
+        \If{$tab[i + 1] < min$}
+        \Let{$min$}{$tab[i + 1]$}
+        \EndIf
+        \If{$tab[i ] > max$}
+        \Let{max}{$tab[i]$}
+        \EndIf
+    \EndIf
+      \Let{$i$}{$i + 2$}
+      \EndFor
+  \EndFunction
+  \end{algorithmic}
+\end{tcolorbox}
+
+
+Calculer le nombre exact de comparaisons effectuées en fonction de la longueur du tableau. On ne comptera que les comparaisons entre les éléments du tableau entre eux et avec le contenu des variables $min$ et $max$.
+
+\section{Appels de sous programmes}
+
+\subsection*{Exercice 3.1}
+On suppose que l'exécution de la fonction $f(n)$ prend un temps en $\mathcal{O}(n)$. En déduire la complexité du programme suivant en fonction de $n$ :
+\begin{tcolorbox}
+  \begin{algorithmic}[1]
+    \Statex
+      \Let{$i$}{$0$}
+      \For{$i < n$}
+        \State f(n - i)
+      \EndFor
+  \end{algorithmic}
+\end{tcolorbox}
+
+\subsection*{Exercice 3.2}
+On suppose que l'exécution de la fonction $f(n)$ prend un temps en $\mathcal{O}(n)$. En déduire la complexité du programme suivant en fonction de $n$ :
+\begin{tcolorbox}
+  \begin{algorithmic}[1]
+    \Statex
+      \Let{$i$}{$1$}
+      \For{$i < n$}
+      \State f(i)
+        \Let{$i$}{$i * 2$}
+      \EndFor
+  \end{algorithmic}
+\end{tcolorbox}  
+
+  \subsection*{Exercice 3.3}
+  
+  On considère la fonction suivante :
+  
+\begin{tcolorbox}  
+   \begin{algorithmic}[1]
+  \Function{$pow$}{$x,n$}
+    \If{$n \text{== 0}$}
+        \text{\textbf{return}} 1
+    \EndIf
+    \Let{$y$}{$x$}
+    \Let{$i$}{$2$}
+    \For{$i < n $}
+        \Let{$y$}{$y * x$}
+    \EndFor
+    \State \text{\textbf{return}} y
+  \EndFunction
+  \end{algorithmic}
+  \end{tcolorbox}
+  
+  
+ \begin{enumerate}
+
+  \item Calculer le nombre exact d'opérations réalisées par un appel à $pow(x,n)$ en fonction de $n$, un entier positif ou nul.
+  
+  On utilise la fonction $pow$ dans la fonction $variation_1$ suivante. Soit $tab$ un tableau quelconque.
+  
+  \begin{tcolorbox}
+     \begin{algorithmic}[1]
+    \Function{$variation_1$}{$x,tab$}
+    \Let{$val$}{0}
+    \Let{$i$}{0}
+    \For{$i < tab.length $}
+        \Let{$val$}{$val + tab[i] * pow(x,i)$}
+    \EndFor
+    \EndFunction
+  \end{algorithmic}
+ \end{tcolorbox} 
+    \newpage
+  \item Que fais la fonction ? Déduire de l'analyse précédente le nombre exact d'opérations réalisées par le programme en fonction de la longueur du tableau $tab$.
+  
+  On propose la variation suivante :
+
+ \begin{tcolorbox} 
+       \begin{algorithmic}[1]
+    \Function{$variation_2$}{$x,tab$}
+    \Let{$val$}{0}
+    \Let{$i$}{0}
+    \Let{$y$}{1}
+    \For{$i < tab.length $}
+        \Let{$val$}{$val + tab[i] * y$}
+        \Let{$y$}{$y * x$}
+    \EndFor
+  \EndFunction
+  \end{algorithmic}
+\end{tcolorbox}
+  
+  \item Calculer le nombre exact d'opérations réalisées par le programme en fonction de la longueur du tableau $tab$.\\
+  
+  On propose enfin la fonction suivante :
+
+\begin{tcolorbox}
+         \begin{algorithmic}[1]
+    \Function{$variation_3$}{$x,tab$}
+    \Let{$val$}{0}
+    \Let{$i$}{$tab.length - 1$}
+    \For{$i >= 0  $}
+        \Let{$val$}{$val + tab[i] * val$}
+        \Let{$i$}{$i - 1$}
+    \EndFor
+  \EndFunction
+  \end{algorithmic}
+\end{tcolorbox}
+
+  
+  \item Calculer le nombre exact d'opérations réalisées par le programme en fonction de la longueur du tableau $tab$.
+  \end{enumerate}  
+  \subsection*{Exercice 3.4}
+  
+  Calculer le nombre d'opérations et la complexité asymptotique de la fonction \textit{mystère} suivante:
+  
+  
+  \begin{tcolorbox}
+         \begin{algorithmic}[1]
+    \Function{$mystere$}{$n$}
+    \Let{$m$}{0}
+    \Let{$i$}{0}
+    \Let{$j$}{0}
+    \For{$i < n$}
+        \For{$j < i$}
+            \Let{$m$}{$ m + i + j$}
+        \EndFor
+    \EndFor
+  \EndFunction
+  \end{algorithmic}
+\end{tcolorbox}
+  
+  
+  
+
+ \newpage
+  \section{Programmes récursifs}
+  
+  \subsection*{Exercice 4.1}
+  On suppose qu'on dispose d'un tableau trié $tab$ dans lequel on cherche la position d'une valeur $x$ (avec la convention que la position est $ -1 $ si $x$ n'apparaît pas dans $tab$). On propose la fonction de recherche suivante dans laquelle l'opération $tab[a:b]$ construit un tableau constitué des cases de $tab$ d'indices compris au sens large entre $a$ et $b$ :
+  
+\begin{tcolorbox}
+        \begin{algorithmic}[1]
+    \Function{$search$}{$x,tab$}
+    \If{\text{$tab.length == 0$}}
+        \State\text{\textbf{return}} -1
+    \EndIf
+    \If{\text{$tab.length == 1$}}
+        \If{\text{$tab[0] == x$}}
+            \State\text{\textbf{return}} 0
+        \Else
+        \State \text{\textbf{return}} -1
+        \EndIf
+    \Else
+        \Let{$pos$}{$\text{tab.length/2}$}
+        \If{$\text{tab[pos] == x}$}
+            \State \text{\textbf{return}} pos
+        \EndIf
+        \If{$\text{tab[pos]} < x$}
+            \Let{$subpos$}{$search(x,tab[(pos + 1):(tab.length - 1)])$}
+            \If{$subpros >= 0$}
+                \State \text{\textbf{return} subpos + pos + 1}
+            \Else
+                \State \text{\textbf{return} -1}
+            \EndIf
+        \Else
+            \Let{$subpos$}{$search(x,tab[0:(pos - 1)])$}
+            \If{$subpos >= 0$}
+                \State \text{\textbf{return} subpos}
+            \Else
+                \State \text{\textbf{return} -1}
+            \EndIf
+            
+        \EndIf
+    \EndIf
+  \EndFunction
+  \end{algorithmic}
+ \end{tcolorbox} 
+  
+  
+  \begin{enumerate}
+      \item En supposant que l'opération $tab[a:b]$ peut être réalisée en temps constant, calculer la complexité en temps dans le cas le pire de ce programme en fonction de la longueur de $tab$.
+      \item En supposant que l'opération $tab[a:b]$ peut être réalisée en temps $\mathcal{O}(b-a+1)$, calculer la complexité en temps dans le cas le pire de ce programme en fonction de la longueur de $tab$.
+  \end{enumerate}
+  
+  \subsection*{Exercice 4.2}
+  
+  On considère l'algorithme d'exponentiation rapide classique implémenté par la fonction suivante
+  
+  \begin{tcolorbox}
+\begin{algorithmic}[1]
+    \Function{$fastpow$}{$x,n$}
+    \If{$\text{n == 0}$}
+        \State\text{\textbf{return} 1}
+    \EndIf
+    \If{$\text{n == 1}$}
+        \State\text{\textbf{return} x}
+    \EndIf
+    \If{$\text{n \% 2 == 0}$}
+        \State\text{$\textbf{return} fastpow(x * x, n / 2)$}
+    \Else
+        \State\text{$\textbf{return}  x * fastpow(x * x, n / 2)$}
+    \EndIf
+
+  \EndFunction
+  \end{algorithmic}
+\end{tcolorbox}  
+  
+  A l'aide du théorème maître, calculer la complexité en temps de cette fonction.
+ 
+
+  
+  
+\end{document}
+

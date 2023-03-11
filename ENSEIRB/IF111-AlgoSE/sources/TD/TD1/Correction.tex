@@ -1,0 +1,287 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{a4wide}
+
+
+\usepackage{comment}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{tcolorbox}
+
+\newtcolorbox{mybox}[3][]
+{
+  colframe = #2!25,
+  colback  = #2!10,
+  coltitle = #2!20!black,  
+  title    = {#3},
+  #1,
+}
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
+
+
+\excludecomment{solution}
+%\includecomment{solution}
+
+\title{IF111 - Algorithmique et structures de données - Correction TD1}
+\date{2021 - 2022}
+\author{Rohan Fossé}
+\begin{document}
+\maketitle
+%\begin{description}
+%	\item[Prerequis : ] Aucun %(si ce n'est le cours...).
+%	\item[Objectifs : ] Ecrire des algorithmes simples, utiliser les structures de  base de la programmation (si alors sinon, boucles pour, tant que), manipuler des tableaux. 
+%\end{description}
+
+\section{Maximum - Minimum}
+
+On souhaite calculer le minimum et le maximum de deux nombres entiers positifs. 
+\begin{enumerate}
+	\item Dans un premier temps, on n'utilisera pas d'instructions conditionnelles, mais une fonction \verb+abs(int x)+, qui retourne la valeur absolue de l'entier \verb+x+. \\
+Écrivez un algorithme affichant le maximum et le minimum de deux nombres passés en paramètres.
+
+\begin{tcolorbox}
+  \begin{algorithmic}[1]
+    \Function{$maxmin$}{$a,b$}
+      \Let{$max$}{$a + b + abs(a - b)/2$}
+      \Let{$min$}{$a + b - abs(a - b)/2$}
+      \State $\text{afficher("Maximum :, max)}$
+      \State $\text{afficher("Minimum :, min)}$
+    \EndFunction
+  \end{algorithmic}
+\end{tcolorbox}
+
+	
+\item Modifiez l'algorithme précédent, en utilisant cette fois les instructions conditionnelles et l'opérateur $>$(supérieur à).
+
+
+\begin{tcolorbox}
+  \begin{algorithmic}[1]
+    \Function{$maxmin2$}{$a,b$}
+      \If{$a > b$}
+         \Let{$max$}{$a$}
+         \Let{$min$}{$b$}
+      \Else
+         \Let{$max$}{$b$}
+         \Let{$min$}{$a$}
+      \EndIf
+      \State $\text{afficher("Maximum :, max)}$
+      \State $\text{afficher("Minimum :, min)}$
+    \EndFunction
+  \end{algorithmic}
+\end{tcolorbox}
+
+\end{enumerate}
+
+
+\section{Rendre la monnaie}
+On se propose d'écrire un algorithme permettant d'obtenir la suite des billets totalisant une somme donnée (dont on suppose qu'elle est un multiple de 10).
+Les espèces disponibles sont des billets de 50, 20, et 10 euros.
+
+Le principe est de donner le billet de valeur la plus grande possible inférieure ou égale à la somme à rendre et de poursuivre la même stratégie avec la somme restante jusqu'à ce que celle-ci soit nulle.
+
+\begin{enumerate}
+\item Écrire cet algorithme en utilisant les structures de contrôle suivantes~: tant que, si, et si sinon. L'algorithme utilisera une variable nommée qui contiendra la somme restant à rendre au fur et à mesure de la remise de billets au client. On n'utilisera comme opérations arithmétiques que des additions ou des soustractions. Le résultat sera l'affichage de la suite des nombres de billets à rendre.
+
+Par exemple, si la somme est~180, l'affichage devra être~:
+
+\begin{verbatim}
+3 billets de 50 euros
+1 billet de 20 euros
+1 billet de 10 euros
+\end{verbatim}
+
+\begin{tcolorbox}
+  \begin{algorithmic}[1]
+    \Function{$RendreMonnaie$}{$s$}
+    \Let{$n_1$}{$0$}
+    \Let{$n_2$}{$0$}
+    \Let{$n_3$}{$0$}
+
+     \While{$s \neq 0$}
+      \If{$s \geq 50$}
+         \Let{$s$}{$s - 50$}
+         \Let{$n_1$}{$n_1 + 1$}
+      \Else 
+            \If{$s \geq 20$}
+                \Let{$s$}{$s - 20$}
+                \Let{$n_2$}{$n_2 + 1$}
+            \Else
+                \Let{$s$}{$s - 10$}
+                \Let{$n_2$}{$n_3 + 1$}
+            \EndIf
+       \EndIf
+      \EndWhile
+      \State $\text{afficher(n1, "billets de 50 euros")}$
+      \State $\text{afficher(n2, "billets de 50 euros")}$
+      \State $\text{afficher(n3, "billets de 50 euros")}$
+    \EndFunction
+  \end{algorithmic}
+  
+  On peut faire remarquer aux étudiants que l'algo ne termine pas si la somme n'est pas un multiple de 10, et changer le test $s\not= 0$ par $s>0$, auquel cas, au pire on rend plus de monnaie que prévu (le minimum nécessaire). Si on donne une correction, il vaut mieux donner le test $s>0$.
+  
+\end{tcolorbox}
+
+
+
+
+\item Déterminer le nombre de soustractions effectuées par l'algorithme, on donnera une formule faisant intervenir des divisions entières par les nombres 50, 20, et 10.
+
+\begin{tcolorbox}
+On remarque que l'algorithme va commencer par rendre autant de billets de 50 que possible, puis de 20, puis de 10.\\
+
+Le premier nombre de soustractions est donc le quotient entier de $s$ par 50. Soit $q_1=\left\lfloor s/50\right\rfloor$, c'est le nombre de billets de 50 rendus et aussi le nombre de soustractions à effectuer pour les billets de 50. \\
+
+Il reste alors à rendre $s-50q_1$. Soit $q_2$ le nombre de billets de 20 à rendre, on a $q_2=\left\lfloor (s-50q_1)/20\right\rfloor$. \\
+
+Enfin, $q_3$ le nombre de billets de 10 à rendre est égal à $\left\lfloor (s-50q_1-20q_2)/10\right\rfloor$.\\
+
+Le nombre de soustractions effectuées est $q_1 + q_2 + q_3$. Ca nous fait une belle jambe, il vaut mieux remarquer qu'après avoir soustrait tous les billets de 50, il reste une somme qui est soit 40, soit 30, soit 20, soit 10, et que donc au pire on va rendre $q_1$ billets de 50 plus deux billets (20+20, 20+10, 10+10, 10 respectivement). Le nombre de soustractions est donc au plus $\left\lfloor \frac{s}{50}\right\rfloor + 2$. \\
+
+On pourra se convaincre que si la somme n'est pas un multiple de 10 et que notre algo a le test $s>0$, le maximum de soustractions est $\left\lfloor \frac{s}{50}\right\rfloor + 3$.
+\end{tcolorbox}
+
+\item Généraliser votre algorithme au cas où les valeurs de billets ou pièces disponibles sont en nombre quelconque et figurent dans un tableau à valeurs décroissantes \verb:val[1]: $>$ \verb:val[2]: $>$ \verb:...: $>$ \verb:val[k]:. Ainsi dans l'exemple considéré plus haut, on aurait \verb:k = 3: et \verb:val[] = { 50, 20, 10 }:.
+
+%\newpage 
+\begin{tcolorbox}
+Il y a plusieurs solutions plus ou moins élégantes~; en gros, soit on fait la boucle externe sur $s$, soit on la fait sur l'indice qui avance dans le tableau. Voici une solution.
+
+
+
+\begin{tabbing}
+~~~~\=~~~~\=~~~~\=~~~~\=~~~~\=\kill
+Rendre-Monnaie-General($s$, $val$, $k$) \\
+\>\{
+\>pour $j$ de $1$ à $k$\+\\
+  \>\{i $\leftarrow$ 0\\
+       tant que ($s\geq val[i]$) \+\\
+       $s\leftarrow s-val[i]$\\
+    \>$i \leftarrow i+1$;\\
+    fin tant que
+    afficher($i$,  \verb  "billets \ de",  val[i] )
+  \>\}\-\\
+\>\}\-\\
+\}\\
+
+\end{tabbing}
+
+\end{tcolorbox}
+
+\item Montrer qu'il existe des valeurs de billets et une somme à rendre pour lesquels cet algorithme ne donne pas le nombre minimum de billets ou de pièces à rendre.
+
+\begin{tcolorbox}
+Essayer avec les billets 200, 120, et 10, et une somme à rendre de 240. L'algo donnera 5 billets à rendre (200 + 10 + 10 + 10 + 10) alors qu'on pourrait rendre (120 + 120).
+\end{tcolorbox}
+
+\end{enumerate}
+
+\section{Manipulation de tableaux}
+\begin{enumerate}
+	\item Écrire un algorithme pour trouver l'élément minimum et l'élément maximum d'un tableau de $n$ cases. Déterminer le nombre d'affectations effectuées par votre algorithme.
+
+	\begin{tcolorbox}
+		\begin{tabbing}
+			~~~~\=~~~~\=~~~~\=~~~~\=~~~~\=\kill
+		Max\_Min\_tab($tableau$, $n$) \\
+		\>\{$max \leftarrow tableau[0]$;\\
+		\>$min \leftarrow tableau[0]$;\\
+		\>pour $i$ de $1$ à $n-1$ faire \\
+		\>\>\{si ($max < tableau[i]$)\\
+		\>\>\>alors $max \leftarrow tableau[i]$;\\
+		\>\> si ($min > tableau[i]$)\\
+		\>\>\>alors $min \leftarrow tableau[i]$;\\
+		\>\> \}\\
+		\>afficher("Maximum : ", $max$);\\
+		\>afficher("Minimum : ", $min$);\\
+		\> \}\\
+		\end{tabbing}
+	\end{tcolorbox}
+	
+	
+	\item Écrire un algorithme qui permet de renverser un tableau $tab$. Le tableau $tab$ sera passé en paramètre avec sa taille $n$. Déterminer le nombre de comparaisons effectuées par votre algorithme.
+	
+	
+	\begin{tcolorbox}
+		\begin{tabbing}
+			~~~~\=~~~~\=~~~~\=~~~~\=~~~~\=\kill
+		Renverser($tab$, $n$) \\
+		\>\{pour $i$ de $0$ à $n/2$ \ faire \\
+		\>\>\{$tmp \leftarrow tab[i]$\\
+		\>\>$tab[i] \leftarrow tab[n-i+1]$;\\
+		\>\>$tab[n - i] \leftarrow tmp$;\\
+		\>retourner $tab$;\\
+		\>\}\\
+		\end{tabbing}
+	\end{tcolorbox}	
+	
+	
+	\item  Un tableau est un palindrome si c'est identique en le lisant de gauche à droite (indices dans l’ordre 1,2,... n) et de droite à gauche (indices dans l'ordre n, n-1,...1). Écrire un algorithme qui teste si le tableau fourni est un palindrome. Donner la complexité en temps de votre algorithme dans le pire de cas.\\
+	
+	
+
+\begin{tcolorbox}
+\paragraph{Solution}
+\begin{tabbing}
+	~~~~\=~~~~\=~~~~\=~~~~\=~~~~\=\kill
+	\>  \textbf{Palindrome(T)}\\
+	 1.\> \{\\
+	 2.\> \> $n \leftarrow$ longueur(A);\\
+	 3.\> \> \textbf{pour} $i$ de $0$ à $\lfloor \frac{n}{2}\rfloor$\textbf{faire}\\
+	4.\> \>\> \textbf{si} $T[i]\neq T[n-i+1]$ \textbf{alors}\\
+       5.\> \> \> \textbf{retourner}  $faux$;\\
+6.\> \> \> \textbf{fin si};\\
+7. \> \> \textbf{fin pour};\\	
+8.\> \> \textbf{retourner}  $true$;\\
+	9.\>  \}
+\end{tabbing}
+\end{tcolorbox}
+
+
+\item Écrire un algorithme qui vérifié s'il est possible de permuter les éléments d'un tableau donné en entrée de manière à obtenir un tableau palindrome. L'algorithme retournera \emph{vrai} si c'est possible, \emph{faux} autrement. On suppose que chaque élément du tableau est une lettre de l'alphabet français.
+Vous avez à disposition (pas nécessaire de l'utiliser) une fonction \emph{CalculPositionAlphabet(c)} qui prend en entrée un caractère et retourne l'entier correspondant à sa position dans l'alphabet.
+
+
+
+\begin{tcolorbox} Plusieurs solutions sont possibles. On peut considerer...
+\end{tcolorbox} 
+
+
+\item Écrire un algorithme pour trouver l'élément minimum et l’élément maximum d’un tableau de $n$ cases. On suppose que tous les éléments du tableau sont différents. L'algorithme doit effectuer au plus $3 \lfloor \frac{n}{2} \rfloor$ comparaisons. L'algorithme \emph{peut} utiliser un tableau auxiliaire de taille $n$.\\
+
+
+
+\begin{tcolorbox} 
+On compare les éléments en paires et on stocke les plus petits sur une moitié du tableau aux et le plus grand dans l'autre moitié. Après on cherche le min dans le sous-tableau de 0 a $\frac{n}{2}$ et le max dans le soustableau de $\frac{n}{2}+1$ a $n-1$. 
+
+
+$\lfloor \frac{n}{2} \rfloor$ pour diviser $2\cdot(\lfloor \frac{n}{2} \rfloor-1)$ pour trouver le max et le min + 2 pour comparer avec l'élément du milieu.
+	\begin{tabbing}
+			~~~~\=~~~~\=~~~~\=~~~~\=~~~~\=\kill
+		Max\_Min\_tab\_rapide($T$) \\
+		\>\{$n \leftarrow longuer(T)$;\\
+               \> \textbf{entier} Taux[1..n] $\leftarrow$ [0,$\ldots$,0];\\
+                \> pour $i$ de $0$ à $n/2$ \ faire \\
+ 		\>\>\ si ($T[i]< T[n-i+1]$)\\
+	        \>\>\>alors $Taux[i] \leftarrow T[i]$; $Taux[n-i+1] \leftarrow T[n-i+1]$;\\
+	        \>\> \> sinon $Taux[i] \leftarrow T[n-i+1]$; $Taux[n-i+1] \leftarrow T[i]$;\\
+		\>\>\ fin si \\
+                \> $max \leftarrow Taux[n]$; $min \leftarrow Taux[1]$;\\
+                \> pour $i$ de $0$ à $(n/2)+1$ \ faire \\
+                \>\>\{si ($Taux[i]<min$) $alors$ \ \ $min\leftarrow Taux[i]$\\
+                 \> pour $i$ de $(n/2)+1$ à $n$ \ faire \\
+                \>\>\{si ($Taux[i]>max$) $alors$ 
+\ \ $max\leftarrow Taux[i]$\\
+	\>afficher("Maximum : ", $max$);\\
+	\>afficher("Minimum : ", $min$);\\
+		\> \}\\
+		\end{tabbing}
+	\end{tcolorbox}
+	
+	\item (bonus) Écrire un algorithme récursif qui teste si le tableau fourni est un palindrome.
+\end{enumerate}
+
+\end{document}

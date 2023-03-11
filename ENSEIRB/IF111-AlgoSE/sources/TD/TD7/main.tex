@@ -1,0 +1,96 @@
+ \documentclass[10pt,a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{a4wide}
+\usepackage{comment}
+\usepackage[pdftex]{graphicx}
+\usepackage{epstopdf}
+\newcommand{\cmd}[1]{\texttt{#1}}
+\newcommand{\remove}{}
+\newcommand{\dir}[1]{\textsf{#1}}
+\newcommand{\pop}{Depiler\xspace}
+\newcommand{\push}{Empiler\xspace}
+\newcommand{\tete}{LireTete}
+\newcommand{\sommet}{LireSommet}
+\newcommand{\empt}{EstVide}
+\newcommand{\enqueue}{Enfiler\xspace}
+\newcommand{\dequeue}{Defiler\xspace}
+\newcommand{\get}{\ensuremath{\leftarrow\ }}
+
+\usepackage[textsize=small, textwidth=2cm, color=yellow]{todonotes}
+
+\excludecomment{solution}
+\includecomment{solution}
+
+\title{IF111 - Algorithmes et structures de données-TD7 :\\ Rappels avancés sur les arbres}
+\date{}
+\author{\underline{Jonathan Narboni}, Rohan Fossé}
+\date{\underline{\texttt{jonathan.narboni@labri.fr}}, \texttt{rfosse@labri.fr}}
+
+
+\begin{document}
+\maketitle
+
+\section*{Exercice 1}
+
+\paragraph*{Rappel}
+Les arbres équilibrés (ou arbres $AVL$ du nom de leurs inventeurs \textit{G.M. Adelson-Velskii} et \textit{E.M. Landis}) sont des arbres binaires tels que pour tout nœud de l’arbre, la différence entre les profondeurs du sous-arbre gauche et du sous-arbre droit est d’au plus 1.
+On suppose de plus que chaque nœud connaît la différence entre les profondeurs de ses sous-arbres droit et gauche (on rajoute un champ $n.delta$ aux nœuds qui contient cette différence, et qui sera mis à jour lorsque l’on modifie l’arbre).
+
+\begin{enumerate}
+    \item En notant N(h) le nombre minimal de sommets d’un arbre équilibré de profondeur h, montrez
+que $N(h+ 2) \geq 2N(h) + 1$;
+    \item En déduire par récurrence que pour tout $h \geq 1$, $ N(2h) \geq 2^h$, et que la profondeur d’un arbre
+équilibré de taille n(la taille d’un arbre est son nombre de sommets) est inférieure à O($log_2(n)$);
+
+    \item Quelle est la complexité de la recherche d’un élément dans un arbre binaire de recherche dans
+le pire des cas en fonction de la hauteur de l’arbre ? En déduire la complexité de la recherche dans
+un arbre binaire de recherche équilibré dans le pire des cas en fonction du nombre de sommets de
+l’arbre.\\
+
+Lorsque l’on insère un nouveau nœud dans un arbre équilibré, il est possible de déséquilibrer les sous-
+arbres d’un nœud de telle sorte que l’arbre ne soit plus équilibré. Il faut alors transformer l’arbre à l’aide
+de rotations pour le ré-équilibrer.\\
+
+    \item Écrivez la fonction $inserer(x, n)$ qui insère la valeur $x$ dans un arbre binaire de recherche dont la racine est $n$;
+
+    \item Quels sont les nœuds qui peuvent avoir été déséquilibrés lorsque l’on insère une valeur dans un
+arbre binaire équilibré ? (comment les trouver si l’on connaît le nœud qui vient d’être ajouté)
+Afin de ré-équilibrer l’arbre après une insertion, on décide donc de remonter à travers tout l’arbre pour
+vérifier que les ancêtres du nœud inséré sont équilibrés.
+
+    \item Écrivez une fonction $verifie(n)$ qui met à jour les champs delta de chacun des ancêtres du
+nœud n qui vient d’être inséré et renvoie le premier nœud pour lequel la différence est de plus ou moins 2 (ou
+None s’il n’y en a aucun).\\
+
+Supposons que l’on ait trouvé le premier nœud n (en partant du nœud que l’on vient d’insérer) dont la
+différence des profondeurs est 2 (le sous-arbre droit est plus profond que celui de gauche). Il va alors
+falloir remonter son fils droit $n_d$ à l’aide d’une rotation gauche entre les nœuds n et $n_d$.\\
+
+    \item Que se passe-t-il si la différence des profondeurs des fils droit et gauche de $n_d$ est égale à −1 (le
+fils gauche est plus profond que le fils droit) lorsque l’on fait une rotation gauche entre les nœuds n
+et $n_d$.\\
+
+Pour éviter le problème de la question précédente, on s’assure avant de faire la rotation entre n et $n_d$
+que le sous-arbre droit de $n_d$ est au moins aussi profond que son sous-arbre gauche. Si ce n’est pas le
+cas, on effectue une rotation droite entre $n_d$ et son fils gauche.
+
+    \item  Écrivez la fonction $corrige(n)$ qui effectue les rotations nécessaires pour corriger une erreur
+d’équilibrage rencontrée en un nœud n.\\
+
+\underline{Indication:} Il faut commencer par regarder lequel des fils de $n$ doit être remonté, puis regarder s’il
+faut d’abord effectuer une rotation au niveau de ce fils avant de faire la rotation au niveau de $n$.\\
+
+    \item Écrivez la fonction $inserer\_AVL(x, n)$ qui insère une valeur x dans un arbre binaire de recherche équilibré tout en le maintenant équilibré.
+    
+    \item Quelle est la complexité de l’opération d’insertion dans un arbre binaire de recherche équilibré
+dans le pire des cas en fonction du nombre de nœuds de l’arbre
+
+
+\end{enumerate}
+\end{document}
+
+
